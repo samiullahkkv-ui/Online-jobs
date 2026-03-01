@@ -3,118 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Jobs & Earnings</title>
+    <title>Online Jobs & Earning Updates</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eaeff1; margin: 0; padding: 0; }
-        .header { background-color: #0056b3; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .header h1 { margin: 0; font-size: 24px; }
+        /* --- Design & Styling --- */
+        body { font-family: 'Arial', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
+        .header { background-color: #1a73e8; color: white; padding: 25px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
         .filters { text-align: center; margin: 20px 0; }
-        .filter-btn { background: white; border: 2px solid #0056b3; color: #0056b3; padding: 8px 15px; margin: 5px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        .filter-btn:hover, .filter-btn.active { background: #0056b3; color: white; }
+        .filter-btn { background: white; border: 1px solid #1a73e8; color: #1a73e8; padding: 10px 20px; margin: 5px; border-radius: 25px; cursor: pointer; transition: 0.3s; }
+        .filter-btn.active, .filter-btn:hover { background: #1a73e8; color: white; }
         
-        .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 15px; max-width: 1200px; margin: auto; }
+        .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
         
-        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; position: relative; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .badge { position: absolute; top: 10px; left: 10px; color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
         
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { margin: 0 0 10px 0; font-size: 18px; color: #333; }
-        .card-desc { color: #555; font-size: 14px; margin-bottom: 15px; flex-grow: 1; }
+        .card-content { padding: 20px; flex-grow: 1; }
+        .card-title { font-size: 20px; margin: 0 0 10px; color: #202124; }
+        .card-desc { color: #5f6368; font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
         
-        .ad-box { text-align: center; margin: 10px 0; background: #f8f9fa; border: 1px dashed #ccc; padding: 5px; min-height: 90px; }
+        .apply-btn { display: block; text-align: center; background: #1a73e8; color: white; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; }
         
-        .apply-btn { text-align: center; background-color: #0056b3; color: white; text-decoration: none; padding: 10px; border-radius: 5px; font-weight: bold; display: block; margin-top: 10px; }
-        .apply-btn:hover { background-color: #004494; }
-        
-        .no-data { text-align: center; grid-column: 1 / -1; color: #777; padding: 30px; }
+        .ad-slot { background: #fafafa; border: 1px dashed #ddd; margin: 15px 0; text-align: center; min-height: 100px; display: flex; align-items: center; justify-content: center; }
+
+        /* --- Secret Admin Entry --- */
+        #secret-gear { position: fixed; bottom: 15px; right: 15px; font-size: 24px; cursor: pointer; opacity: 0.3; color: #999; z-index: 1000; }
+        #login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .login-card { background: white; padding: 30px; border-radius: 10px; width: 280px; text-align: center; }
+        .login-card input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .login-card button { width: 100%; padding: 12px; background: #202124; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+        /* --- Admin Panel --- */
+        #admin-panel { display: none; padding: 30px; max-width: 700px; margin: auto; background: white; min-height: 100vh; }
+        .admin-form { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
+        .admin-form input, .admin-form textarea, .admin-form select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .publish-btn { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; }
+        .delete-item { background: #fff; border: 1px solid #ddd; padding: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; }
     </style>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9654539721896304" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<div class="header">
-    <h1>Daily Jobs & Earning Updates</h1>
-</div>
-
-<div class="ad-box" style="max-width: 1200px; margin: 15px auto;">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9654539721896304" data-ad-slot="1716089384" data-ad-format="auto" data-full-width-responsive="true"></ins>
-</div>
-
-<div class="filters">
-    <button class="filter-btn active" onclick="filterData('All', this)">All</button>
-    <button class="filter-btn" onclick="filterData('Job', this)">Jobs</button>
-    <button class="filter-btn" onclick="filterData('Earning App', this)">Apps</button>
-    <button class="filter-btn" onclick="filterData('Earning Website', this)">Websites</button>
-</div>
-
-<div class="container" id="post-container">
+<div id="user-view">
+    <div class="header">
+        <h1>Online Jobs & Earning Apps</h1>
+        <p>Latest Updates Daily</p>
     </div>
 
+    <div class="ad-slot" style="max-width: 1200px; margin: 20px auto;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9654539721896304" data-ad-slot="1716089384" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterData('All', this)">All</button>
+        <button class="filter-btn" onclick="filterData('Job', this)">Jobs</button>
+        <button class="filter-btn" onclick="filterData('Earning App', this)">Apps</button>
+    </div>
+
+    <div class="container" id="post-list">
+        </div>
+</div>
+
+<div id="secret-gear" onclick="showLogin()">⚙️</div>
+
+<div id="login-overlay">
+    <div class="login-card">
+        <h3>Admin Access</h3>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="doLogin()">Login</button>
+        <p style="font-size: 12px; margin-top: 15px; cursor: pointer; color: #666;" onclick="hideLogin()">Cancel</p>
+    </div>
+</div>
+
+<div id="admin-panel">
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+    <h2>Add New Post</h2>
+    <div class="admin-form">
+        <select id="p-cat">
+            <option value="Job">Job</option>
+            <option value="Earning App">Earning App</option>
+        </select>
+        <input type="text" id="p-title" placeholder="Post Title">
+        <input type="text" id="p-img" placeholder="Image URL (Link)">
+        <input type="text" id="p-link" placeholder="Apply/Download Link">
+        <textarea id="p-desc" placeholder="Details..." rows="4"></textarea>
+        <button class="publish-btn" onclick="savePost()">Publish Now</button>
+    </div>
+
+    <h3>Active Posts</h3>
+    <div id="manage-list"></div>
+</div>
+
 <script>
-window.onload = function() {
-    loadUserPosts('All');
-};
+    // --- Core Logic ---
+    let storageKey = "my_online_jobs_data";
 
-function loadUserPosts(categoryFilter) {
-    let posts = JSON.parse(localStorage.getItem("jobs")) || [];
-    let container = document.getElementById("post-container");
-    container.innerHTML = ""; 
+    window.onload = () => renderUserPosts('All');
 
-    let filteredPosts = posts;
-    if (categoryFilter !== 'All') {
-        filteredPosts = posts.filter(post => post.category === categoryFilter);
+    function getPosts() { return JSON.parse(localStorage.getItem(storageKey)) || []; }
+
+    // User Rendering
+    function renderUserPosts(filter) {
+        const posts = getPosts();
+        const container = document.getElementById('post-list');
+        container.innerHTML = "";
+        
+        const filtered = filter === 'All' ? posts : posts.filter(p => p.category === filter);
+
+        filtered.forEach((post, index) => {
+            // Har 2 post ke baad ad slot
+            let adCode = (index > 0 && index % 2 === 0) ? `
+                <div class="ad-slot">
+                    <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-gw-1+2a-9x+5c" data-ad-client="ca-pub-9654539721896304" data-ad-slot="1716089384"></ins>
+                </div>` : "";
+
+            container.innerHTML += `
+                <div class="card">
+                    <img src="${post.image || 'https://via.placeholder.com/400x200'}" onerror="this.src='https://via.placeholder.com/400x200'">
+                    <div class="card-content">
+                        <small style="color: #1a73e8; font-weight: bold;">${post.category}</small>
+                        <h3 class="card-title">${post.title}</h3>
+                        <p class="card-desc">${post.desc}</p>
+                        <a href="${post.link}" class="apply-btn" target="_blank">View Details</a>
+                    </div>
+                </div>
+                ${adCode}
+            `;
+        });
+
+        // Run Ads
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
     }
 
-    if (filteredPosts.length === 0) {
-        container.innerHTML = `<div class="no-data">Data available nahi hai. Admin se post daalein.</div>`;
-        return;
+    function filterData(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderUserPosts(cat);
     }
 
-    filteredPosts.forEach((post, index) => {
-        let badgeColor = post.category === "Job" ? "#28a745" : (post.category === "Earning App" ? "#dc3545" : "#007bff");
+    // --- Admin & Login Logic ---
+    function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
+    function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 
-        // Har doosre post ke baad card ke andar ad show karega (Safe limit for AdSense)
-        let adHtml = "";
-        if (index % 2 !== 0) {
-            adHtml = `
-            <div class="ad-box">
-                <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-gw-1+2a-9x+5c" data-ad-client="ca-pub-9654539721896304" data-ad-slot="1716089384"></ins>
-            </div>`;
+    function doLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u === "samiullah" && p === "sami12") {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('user-view').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            renderAdminList();
+        } else { alert("Access Denied!"); }
+    }
+
+    function doLogout() {
+        document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('user-view').style.display = 'block';
+        renderUserPosts('All');
+    }
+
+    function savePost() {
+        const title = document.getElementById('p-title').value;
+        const link = document.getElementById('p-link').value;
+        if(!title || !link) return alert("Fill required fields!");
+
+        const posts = getPosts();
+        posts.unshift({
+            id: Date.now(),
+            category: document.getElementById('p-cat').value,
+            title: title,
+            image: document.getElementById('p-img').value,
+            link: link,
+            desc: document.getElementById('p-desc').value
+        });
+
+        localStorage.setItem(storageKey, JSON.stringify(posts));
+        alert("Published!");
+        renderAdminList();
+        // Clear inputs
+        ['p-title', 'p-img', 'p-link', 'p-desc'].forEach(id => document.getElementById(id).value = "");
+    }
+
+    function renderAdminList() {
+        const list = document.getElementById('manage-list');
+        list.innerHTML = "";
+        getPosts().forEach(post => {
+            list.innerHTML += `
+                <div class="delete-item">
+                    <span>${post.title}</span>
+                    <button style="color:red; cursor:pointer;" onclick="deletePost(${post.id})">Delete</button>
+                </div>
+            `;
+        });
+    }
+
+    function deletePost(id) {
+        if(confirm("Delete this?")) {
+            let posts = getPosts().filter(p => p.id !== id);
+            localStorage.setItem(storageKey, JSON.stringify(posts));
+            renderAdminList();
         }
-
-        container.innerHTML += `
-        <div class="card">
-            <span class="badge" style="background-color: ${badgeColor};">${post.category}</span>
-            <img src="${post.image}" alt="Image">
-            <div class="card-content">
-                <h3 class="card-title">${post.title}</h3>
-                <p class="card-desc">${post.desc}</p>
-                ${adHtml}
-                <a href="${post.url}" class="apply-btn" target="_blank">Apply / View Info</a>
-            </div>
-        </div>`;
-    });
-
-    // Pushing AdSense tags properly after rendering HTML
-    let adElements = container.getElementsByClassName("adsbygoogle");
-    for (let i = 0; i < adElements.length; i++) {
-        try {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (e) {
-            console.log("AdSense Error:", e);
-        }
     }
-}
-
-function filterData(category, btnElement) {
-    let buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-    loadUserPosts(category);
-}
 </script>
 
 </body>
-</html>
+    </html>
+    
