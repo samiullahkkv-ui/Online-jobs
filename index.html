@@ -6,12 +6,10 @@
     <title>APK PRO | Premium Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9654539721896304" crossorigin="anonymous"></script>
-
     <style>
         :root { --primary: #00e5ff; --bg: #0a0a0c; --card-bg: #16161a; --text: #ffffff; --border: rgba(255, 255, 255, 0.1); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
         
         header { 
             padding: 20px; text-align: center; font-size: 22px; font-weight: 800; 
@@ -26,15 +24,27 @@
         #posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
         
         .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; }
-        .card img { width: 100%; height: 180px; object-fit: cover; background: #222; }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #222; border-bottom: 1px solid var(--border); }
         .card-content { padding: 15px; flex-grow: 1; }
         .badge { font-size: 10px; color: var(--primary); background: rgba(0,229,255,0.1); padding: 4px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-weight: 700; }
-        .btn-action { display: block; background: var(--primary); padding: 12px; border-radius: 8px; color: #000; text-decoration: none; text-align: center; font-weight: 700; margin-top: 10px; }
+        .btn-action { display: block; background: var(--primary); padding: 12px; border-radius: 8px; color: #000; text-decoration: none; text-align: center; font-weight: 700; margin-top: 10px; transition: 0.3s; }
+        .btn-action:hover { opacity: 0.8; transform: scale(1.02); }
 
-        .ad-row { grid-column: 1 / -1; width: 100%; margin: 10px 0; min-height: 100px; text-align: center; background: rgba(255,255,255,0.02); }
+        /* Adsterra Row Styling */
+        .ad-container { 
+            grid-column: 1 / -1; 
+            width: 100%; 
+            margin: 10px 0 20px 0; 
+            min-height: 80px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-        /* Admin UI */
-        #loginBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: #1a1a1e; padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 90%; max-width: 320px; }
+        #loginBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: #1a1a1e; padding: 30px; border-radius: 20px; border: 1px solid var(--primary); width: 90%; max-width: 320px; box-shadow: 0 0 40px #000; }
         #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: var(--bg); overflow-y: auto; padding: 20px; }
         .admin-container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid var(--border); }
         input, select { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; outline: none; }
@@ -57,7 +67,7 @@
 <div id="posts"></div>
 
 <div id="loginBox">
-    <h3 style="text-align:center; margin-bottom:20px;">Admin Login</h3>
+    <h3 style="text-align:center; margin-bottom:20px;">Admin Access</h3>
     <input type="password" id="adminPass" placeholder="Enter PIN">
     <button onclick="checkAdmin()" class="btn-save">Unlock</button>
 </div>
@@ -65,8 +75,8 @@
 <div id="adminPanel">
     <div class="admin-container">
         <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h2 style="color:var(--primary)">Control Center</h2>
-            <button onclick="closeAdmin()" style="background:#444; color:#fff; border:none; padding:8px 15px; border-radius:8px;">Exit</button>
+            <h2 style="color:var(--primary)">Dashboard</h2>
+            <button onclick="closeAdmin()" style="background:#444; color:#fff; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;">Exit</button>
         </div>
         <input id="title" placeholder="Post Title">
         <select id="category">
@@ -74,9 +84,9 @@
             <option value="Online Job">Online Job</option>
             <option value="Social">Social Account</option>
         </select>
-        <input id="image" placeholder="Direct Image URL">
-        <input id="link" placeholder="Target Link">
-        <button onclick="savePost()" id="saveBtn" class="btn-save">PUBLISH</button>
+        <input id="image" placeholder="Image Link">
+        <input id="link" placeholder="Download Link">
+        <button onclick="savePost()" id="saveBtn" class="btn-save">PUBLISH NOW</button>
         <div id="manageList" style="margin-top:20px;"></div>
     </div>
 </div>
@@ -85,6 +95,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
+// Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyB1xDTe_eNQCdRv8IQThV5uZdqWi9kGS8A",
     authDomain: "jibs-707f7.firebaseapp.com",
@@ -97,9 +108,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Adsterra Configuration
+const AD_KEY = "7e868886e37e96b631d889228834d588";
+
 let allPosts = [];
 let currentCategory = "All";
 
+// Real-time listener
 onSnapshot(query(collection(db, "posts"), orderBy("created", "desc")), (snap) => {
     allPosts = snap.docs.map(d => ({...d.data(), id: d.id}));
     renderPosts();
@@ -109,21 +124,37 @@ onSnapshot(query(collection(db, "posts"), orderBy("created", "desc")), (snap) =>
 function renderPosts() {
     const container = document.getElementById("posts");
     container.innerHTML = "";
+    
     const filtered = allPosts.filter(p => currentCategory === "All" || p.category === currentCategory);
     
-    filtered.forEach((p) => {
-        const cardHtml = `
-        <div class="card">
-            <img src="${p.image}" onerror="this.src='https://via.placeholder.com/400x200?text=Image+Error'">
+    filtered.forEach((p, index) => {
+        // Create Card
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="${p.image}" onerror="this.src='https://via.placeholder.com/400x200?text=APK+PRO'">
             <div class="card-content">
                 <span class="badge">${p.category}</span>
                 <h3>${p.title}</h3>
                 <a href="${p.link}" target="_blank" class="btn-action">OPEN</a>
             </div>
-        </div>`;
-        const adHtml = `<div class="ad-row"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9654539721896304" data-ad-slot="2571500310" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
-        container.innerHTML += cardHtml + adHtml;
-        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+        `;
+        container.appendChild(card);
+
+        // Create Ad Row after each card
+        const adDiv = document.createElement('div');
+        adDiv.className = 'ad-container';
+        const adId = `ad-slot-${index}`;
+        adDiv.id = adId;
+        container.appendChild(adDiv);
+
+        // Inject Adsterra Script
+        try {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = `//www.highperformanceformat.com/${AD_KEY}/invoke.js`;
+            adDiv.appendChild(script);
+        } catch(e) { console.error("Ad failed to load"); }
     });
 }
 
@@ -139,9 +170,6 @@ window.savePost = async () => {
     const category = document.getElementById("category").value;
     const image = document.getElementById("image").value;
     const link = document.getElementById("link").value;
-    
-    const dangerWords = ["hack", "crack", "cheat", "password", "wathsapp"];
-    if (dangerWords.some(word => title.toLowerCase().includes(word))) return alert("Safety Warning: Don't use flagged words.");
 
     if(!title || !image || !link) return alert("Fill all fields!");
 
@@ -149,10 +177,10 @@ window.savePost = async () => {
         await addDoc(collection(db, "posts"), { title, category, image, link, created: Date.now() });
         alert("Published!");
         ["title", "image", "link"].forEach(id => document.getElementById(id).value = "");
-    } catch (e) { alert("Error: Check Firebase Rules."); }
+    } catch (e) { alert("Error: Rules Issue"); }
 };
 
-window.deletePost = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "posts", id)); };
+window.deletePost = async (id) => { if(confirm("Delete this?")) await deleteDoc(doc(db, "posts", id)); };
 
 let clicks = 0;
 document.getElementById("secretTrigger").onclick = () => {
@@ -162,20 +190,19 @@ document.getElementById("secretTrigger").onclick = () => {
 };
 
 window.checkAdmin = () => {
-    // NEW PASSWORD SET HERE
     if(document.getElementById("adminPass").value === "0706176") {
         document.getElementById("adminPanel").style.display = "block";
         document.getElementById("loginBox").style.display = "none";
-    } else alert("Incorrect PIN!");
+    } else alert("Wrong PIN!");
 };
 
 window.closeAdmin = () => document.getElementById("adminPanel").style.display = "none";
 
 function renderAdminList() {
     document.getElementById("manageList").innerHTML = allPosts.map(p => `
-        <div style="display:flex; justify-content:space-between; padding:10px; background:#222; margin-bottom:5px; border-radius:5px;">
-            <span>${p.title}</span>
-            <button onclick="deletePost('${p.id}')" style="color:red; background:none; border:none; cursor:pointer;">Del</button>
+        <div style="display:flex; justify-content:space-between; padding:12px; background:#222; margin-bottom:8px; border-radius:8px; border:1px solid #333;">
+            <span style="font-size:14px;">${p.title}</span>
+            <button onclick="deletePost('${p.id}')" style="color:#ff4444; background:none; border:none; cursor:pointer; font-weight:bold;">DELETE</button>
         </div>
     `).join('');
 }
