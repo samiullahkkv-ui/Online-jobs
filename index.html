@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta name="google-site-verification" content="o48Yg61o58_VGhHDoHJ0ZBi8kWA6moyX8N-HXhAsm-4" />
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APK PRO | Premium Portal</title>
-    
+    <meta name="google-site-verification" content="od8YgG1oS8_VQWNDoHJJDZi8kWA6meyX8N-HXhAsw-4" />
+    <title>Online Jobs Alpha | Premium Job & App Portal</title>
+    <meta name="description" content="Get access to verified online jobs and premium pro apps. Online Jobs Alpha is your gateway to remote work and professional tools.">
+
+    <meta name="robots" content="index, follow">
+
     <script type='text/javascript' src='https://pl28839208.effectivegatecpm.com/38/f7/b9/38f7b926b986f6c1723c477850498d6e.js'></script>
     <script src="https://pl28858949.effectivegatecpm.com/7d/97/0e/7d970e2a03dd099466726126e933483b.js"></script>
 
@@ -69,7 +73,6 @@
             display: grid; place-items: center;
         }
 
-        /* Top Banner Ad Styling */
         .ad-container-top { 
             width: 100%; max-width: 728px; margin: 20px auto; min-height: 90px; 
             background: var(--glass); border-radius: 16px; border: 1px solid var(--border); 
@@ -133,9 +136,9 @@
             cursor: pointer; background: var(--gradient); color: white; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* Admin UI */
+        /* Login Security Patch: Isay text banaya taake bots ko 'Login Form' na lage */
         #loginBox, #adminPanel { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; padding: 20px; backdrop-filter: blur(15px);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px; backdrop-filter: blur(20px);
         }
         #loginBox { top: 50%; left: 50%; transform: translate(-50%, -50%); height: fit-content; width: 90%; max-width: 400px; border: 1px solid var(--border); border-radius: 30px; background: var(--card-bg); }
         .admin-container { max-width: 500px; margin: 40px auto; background: var(--card-bg); padding: 30px; border-radius: 30px; border: 1px solid var(--border); }
@@ -155,7 +158,7 @@
 <body data-theme="dark">
 
 <header>
-    <div class="logo" id="secretTrigger">APK PRO PORTAL</div>
+    <div class="logo" id="secretTrigger">ONLINE JOBS ALPHA</div>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
         <i class="fa-solid fa-moon"></i>
     </button>
@@ -170,10 +173,10 @@
 
 <nav class="nav-container">
     <div class="nav-scroll">
-        <button id="cat-All" class="active" onclick="filterCat('All', this)">All Items</button>
-        <button id="cat-APK Pro" onclick="filterCat('APK Pro', this)">Premium Apps</button>
-        <button id="cat-Online Job" onclick="filterCat('Online Job', this)">Online Jobs</button>
-        <button id="cat-Social" onclick="filterCat('Social', this)">Accounts</button>
+        <button id="cat-All" class="active" onclick="filterCat('All', this)">All Opportunities</button>
+        <button id="cat-APK Pro" onclick="filterCat('APK Pro', this)">Pro Apps</button>
+        <button id="cat-Online Job" onclick="filterCat('Online Job', this)">Verified Jobs</button>
+        <button id="cat-Social" onclick="filterCat('Social', this)">Premium Tools</button>
     </div>
 </nav>
 
@@ -181,29 +184,29 @@
 
 <div id="loginBox">
     <div style="padding: 20px;">
-        <h3 style="margin-bottom:20px; text-align:center;">Admin Security</h3>
-        <input type="password" id="adminPass" placeholder="Enter PIN">
-        <button onclick="checkAdmin()" class="btn-save">LOGIN</button>
-        <p onclick="toggleLogin(false)" style="text-align:center; margin-top:15px; font-size:13px; color:var(--sub-text); cursor:pointer;">Close</p>
+        <h3 style="margin-bottom:20px; text-align:center;">Security Gate</h3>
+        <input type="text" id="adminPass" placeholder="Enter Access Key" style="-webkit-text-security: disc;">
+        <button onclick="checkAdmin()" class="btn-save">UNLOCK</button>
+        <p onclick="toggleLogin(false)" style="text-align:center; margin-top:15px; font-size:13px; color:var(--sub-text); cursor:pointer;">Exit</p>
     </div>
 </div>
 
 <div id="adminPanel">
     <span class="close-admin" onclick="closeAdmin()">&times;</span>
     <div class="admin-container">
-        <h2 style="margin-bottom:20px;">Manage Portal</h2>
-        <input id="title" placeholder="Post Title">
+        <h2 style="margin-bottom:20px;">Portal Management</h2>
+        <input id="title" placeholder="Job or App Name">
         <select id="category">
             <option value="APK Pro">APK Pro</option>
             <option value="Online Job">Online Job</option>
             <option value="Social">Social</option>
         </select>
-        <input id="image" placeholder="Image URL">
-        <input id="link" placeholder="Download URL (Smart Link)">
-        <button onclick="savePost()" class="btn-save">PUBLISH POST</button>
+        <input id="image" placeholder="Cover Image URL">
+        <input id="link" placeholder="Smart Link / Destination">
+        <button onclick="savePost()" class="btn-save">GO LIVE</button>
         
         <div style="margin-top:25px; border-top: 1px solid var(--border); padding-top:15px;">
-            <h4 style="margin-bottom:10px;">Active Posts</h4>
+            <h4 style="margin-bottom:10px;">Live Posts</h4>
             <div id="manageList" style="max-height: 250px; overflow-y: auto;"></div>
         </div>
     </div>
@@ -227,7 +230,6 @@
     let allPosts = [];
     let currentCategory = "All";
 
-    // Real-time Data Sync
     onSnapshot(query(collection(db, "posts"), orderBy("created", "desc")), (snap) => {
         allPosts = snap.docs.map(d => ({ ...d.data(), id: d.id }));
         renderPosts();
@@ -244,34 +246,32 @@
             container.insertAdjacentHTML('beforeend', `
                 <article class="card">
                     <div class="card-img-wrapper">
-                        <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x250?text=APK+PRO'">
-                        <div class="views-badge"><i class="fa-solid fa-cloud-arrow-down"></i> ${downloads}</div>
+                        <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x250?text=Online+Jobs+Alpha'">
+                        <div class="views-badge"><i class="fa-solid fa-bolt"></i> ${downloads} Active</div>
                     </div>
                     <div class="card-content">
                         <span class="cat-tag">${p.category}</span>
                         <h3>${p.title}</h3>
                     </div>
                     <div class="card-footer">
-                        <span style="font-size:12px; color:var(--sub-text); font-weight:600;"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> Verified</span>
+                        <span style="font-size:12px; color:var(--sub-text); font-weight:600;"><i class="fa-solid fa-circle-check" style="color:var(--primary)"></i> Verified Pro</span>
                         <div style="display:flex; gap:10px;">
                             <button class="footer-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i></button>
                             <button class="footer-btn" onclick="shareAndCopy('${p.title}')"><i class="fa-solid fa-share-nodes"></i></button>
                         </div>
                     </div>
-                    <button onclick="trackDownload('${p.id}', '${p.link}')" class="btn-action">Get File Now</button>
+                    <button onclick="trackDownload('${p.id}', '${p.link}')" class="btn-action">Access Pro Now</button>
                 </article>`);
         });
     }
 
-    // Direct Ad Redirect + Analytics
     window.trackDownload = async (postId, url) => {
         try {
             const postRef = doc(db, "posts", postId);
             await updateDoc(postRef, { downloads: increment(1) });
-            // Smart Link logic - Adding your provided key
             const finalLink = "https://www.effectivegatecpm.com/h03kkwv4b7?key=8a514977f02194dc4ed0de00c3a24d2c";
-            window.open(finalLink, '_blank'); // Direct to Smart link for revenue
-            setTimeout(() => { window.location.href = url; }, 1000); // Redirect to original link after pop
+            window.open(finalLink, '_blank'); 
+            setTimeout(() => { window.location.href = url; }, 1000); 
         } catch (e) {
             window.open(url, '_blank');
         }
@@ -283,18 +283,18 @@
         const image = document.getElementById("image").value;
         const link = document.getElementById("link").value;
 
-        if (!title || !image || !link) return alert("All fields are required!");
+        if (!title || !image || !link) return alert("Fields are empty!");
 
         await addDoc(collection(db, "posts"), {
             title, category, image, link, downloads: 0, created: Date.now()
         });
         
-        alert("Published Successfully!");
+        alert("Published!");
         ["title", "image", "link"].forEach(id => document.getElementById(id).value = "");
     };
 
     window.deletePost = async (id) => {
-        if (confirm("Permanently delete this post?")) {
+        if (confirm("Delete this?")) {
             await deleteDoc(doc(db, "posts", id));
         }
     };
@@ -304,7 +304,7 @@
         list.innerHTML = allPosts.map(p => `
             <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--border);margin-bottom:8px;border-radius:12px;background:var(--glass);">
                 <span style="font-size:13px; font-weight:600;">${p.title.substring(0,25)}...</span>
-                <button onclick="deletePost('${p.id}')" style="color:#ff4757;border:none;background:none;cursor:pointer;font-weight:bold;">DELETE</button>
+                <button onclick="deletePost('${p.id}')" style="color:#ff4757;border:none;background:none;cursor:pointer;font-weight:bold;">REMOVE</button>
             </div>`).join('');
     };
 
@@ -325,7 +325,7 @@
     };
 
     window.shareAndCopy = (t) => {
-        const text = `Check out ${t} on APK PRO: ${window.location.href}`;
+        const text = `Join Online Jobs Alpha to access: ${t} - Link: ${window.location.href}`;
         navigator.clipboard.writeText(text);
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     };
@@ -336,7 +336,6 @@
         icon.className = b.classList.contains('liked') ? "fa-solid fa-heart" : "fa-regular fa-heart";
     };
 
-    // Secret Admin Access
     let clicks = 0;
     document.getElementById("secretTrigger").onclick = () => {
         clicks++;
@@ -353,7 +352,7 @@
             document.getElementById("adminPanel").style.display = "block";
             toggleLogin(false);
         } else {
-            alert("Unauthorized Access");
+            alert("Key Incorrect");
         }
     };
 
